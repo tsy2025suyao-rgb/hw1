@@ -8,7 +8,7 @@
 
 ```text
 .
-├── data_loader.py   # 数据加载与预处理：读取图像、标签编码、分层划分、展平、标准化统计、数据增强
+├── data_loader.py   # 数据加载与预处理：读取图像、标签编码、分层划分、展平、标准化统计、空间几何变换
 ├── model.py         # 模型定义：Linear、激活函数、Dropout、CrossEntropyLoss、SGD/Adam、MLP
 ├── train.py         # 训练循环：训练/验证、反向传播、学习率衰减、早停、最优权重保存、曲线保存
 ├── test.py          # 测试评估：加载最优权重、输出 accuracy、打印/保存混淆矩阵及热力图
@@ -83,7 +83,7 @@ python train.py --epochs 20 --batch-size 128 --lr 1e-3 --optimizer sgd --hidden-
 python train.py --epochs 60 --batch-size 128 --lr 0.002 --optimizer momentum --momentum 0.9 --hidden-dims 1024,512,256 --dropout 0.15,0.15,0.15 --weight-decay 1e-4 --patience 10 --lr-patience 4 --lr-decay 0.5 --min-lr 1e-5 --clip-norm 5.0 --augment --plot-curves --plot-path result/final_aug/final_trial1 --model-path result/final_aug/model/final_trial1_aug_60ep.pkl
 ```
 
-不启用数据增强：
+不启用几何变换：
 
 ```bash
 python train.py --epochs 60 --batch-size 128 --lr 0.002 --optimizer momentum --momentum 0.9 --hidden-dims 1024,512,256 --dropout 0.15,0.15,0.15 --weight-decay 1e-4 --patience 10 --lr-patience 4 --lr-decay 0.5 --min-lr 1e-5 --clip-norm 5.0 --no-augment --plot-curves --plot-path result/final_noaug/final_trial1 --model-path result/final_noaug/model/final_trial1_noaug_60ep.pkl
@@ -105,7 +105,7 @@ python search.py --mode initial --n-iter 10 --csv-path search_results.csv --over
 python search.py --mode finetune --n-iter 10 --csv-path finetune_results.csv --overwrite
 ```
 
-搜索会记录每组超参数对应的验证集 loss 和验证集 accuracy。搜索空间包括隐藏层大小、学习率、正则化强度、Dropout、batch size 和是否启用数据增强。
+搜索会记录每组超参数对应的验证集 loss 和验证集 accuracy。搜索空间包括隐藏层大小、学习率、正则化强度、Dropout、batch size 和是否启用几何变换。
 
 ## 测试与混淆矩阵
 
@@ -142,8 +142,8 @@ python analysis.py --model-path result/final_aug/model/final_trial1_aug_60ep.pkl
 
 | 实验 | 测试 loss | 测试 accuracy | 目录 |
 |---|---:|---:|---|
-| 启用数据增强 | `0.9365` | `0.7251` | `result/final_aug/` |
-| 不启用数据增强 | `1.1528` | `0.6839` | `result/final_noaug/` |
+| 启用几何变换 | `0.9365` | `0.7251` | `result/final_aug/` |
+| 不启用几何变换 | `1.1528` | `0.6839` | `result/final_noaug/` |
 
 ## 最终结果对应命令
 
